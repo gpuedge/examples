@@ -25,6 +25,7 @@ def configure_gpu():
     cycles_prefs.get_devices()
     print(cycles_prefs.compute_device_type)
     for d in cycles_prefs.devices:
+        #This is unnecessary use all devices?
         d["use"] = False
         if d["type"] == 0:
             d["use"] = True

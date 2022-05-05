@@ -40,18 +40,21 @@ echo "blender finished"
 
 FILE='file=@out.png'
 FILEGPUX='@out.png'
+FILEEXT='.png'
 if [[ "$7" =~ ^ANI* ]]
 then
   # Zipping up frames
   zip out.zip out_*.png
   FILE='file=@out.zip'
   FILEGPUX='@out.zip'
+  FILEEXT='.zip'
 elif [[ "$7" =~ ^ani* ]]
 then
   # Zipping up frames
   zip out.zip out_*.png
   FILE='file=@out.zip'
   FILEGPUX='@out.zip'
+  FILEEXT='.zip'
 fi
 
 if [ "$2" == "SIASKY" ]
@@ -65,8 +68,7 @@ then
 elif [ "$2" == "GPUX" ]
 then
   echo "uploading to GPUX"
-  echo "curl -s --unix-socket /api -X POST http://dontcare/gpux/v0/add --data-binary $FILEGPUX -H 'Content-Type:application/octet-stream'"
-  curl -s --unix-socket /api -H "Content-Type:application/octet-stream" -X POST --data-binary $FILEGPUX "http://dontcare/gpux/v0/add" | jq -r '.sha1' | awk '{print $1}'
+  curl -s --unix-socket /api -H "Content-Type:application/octet-stream" -X POST --data-binary $FILEGPUX "http://dontcare/gpux/v0/add" | jq -r '.sha1' | awk -v filext="$FILEEXT" '{print $1filext}'
 else
   echo "uploading to URL $2"
   curl -s -X POST "$2" -F $FILE
