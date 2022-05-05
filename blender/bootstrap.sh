@@ -1,0 +1,73 @@
+#!/bin/bash
+set -e -o pipefail
+
+# Fix for NVIDIA CUDA key rotation: https://github.com/nytimes/rd-blender-docker/issues/41
+echo "temp fix cuda key rotation.. https://github.com/nytimes/rd-blender-docker/issues/41"
+rm /etc/apt/sources.list.d/cuda.list \
+  && rm /etc/apt/sources.list.d/nvidia-ml.list \
+  && apt-key del 7fa2af80 \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends curl \
+  && curl -sSLO https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb \
+  && dpkg -i cuda-keyring_1.0-1_all.deb \
+  && rm cuda-keyring_1.0-1_all.deb \
+  && rm -rf /var/lib/apt/lists/*
+
+echo "downloading extra packages.."
+apt-get -qq update && DEBIAN_FRONTEND=noninteractive apt-get -qq -y install curl jq zip aria2 > /dev/null
+
+echo "downloading .blend source from $1"
+if [[ "$1" =~ ^ipfs.* ]]
+then
+  IPFSURL=$1
+  CID="${IPFSURL:7}"
+  curl --unix-socket /api -X POST "http://dontcare/api/v0/cat?arg=$CID" --output source.blend
+elif [[ "$1" =~ ^gpux.* ]]
+then
+  GPUXURL=$1
+  CID="${GPUXURL:7}"
+  curl --unix-socket /api "http://dontcare/gpux/v0/cat/$CID" --output source.blend
+else
+  aria2c -x5 --check-certificate=false "$1" -o source.blend
+fi
+
+echo "downloading script.py"
+aria2c -x5 https://raw.githubusercontent.com/gpuedge/examples/main/blender/script.py
+
+echo "running blender $3 $4 $5 $6 $7"
+blender -b --factory-startup -P script.py -- $3 $4 $5 $6 $7 || true
+echo "blender finished"
+
+FILE='file=@out.png'
+FILEGPUX='@out.png'
+if [[ "$7" =~ ^ANI* ]]
+then
+  # Zipping up frames
+  zip out.zip out_*.png
+  FILE='file=@out.zip'
+  FILEGPUX='@out.zip'
+elif [[ "$7" =~ ^ani* ]]
+then
+  # Zipping up frames
+  zip out.zip out_*.png
+  FILE='file=@out.zip'
+  FILEGPUX='@out.zip'
+fi
+
+if [ "$2" == "SIASKY" ]
+then
+  echo "uploading to SIASKY"
+  curl -s -X POST https://siasky.net/skynet/skyfile -F $FILE | jq -r '.skylink' | awk '{print "https://siasky.net/"$1}'
+elif [ "$2" == "IPFS" ]
+then
+  echo "uploading to IPFS"
+  curl -s --unix-socket /api -X POST http://dontcare/api/v0/add -F $FILE | jq -r '.Hash' | awk '{print "https://cloudflare-ipfs.com/ipfs/"$1}'
+elif [ "$2" == "GPUX" ]
+then
+  echo "uploading to GPUX"
+  echo "curl -s --unix-socket /api -X POST http://dontcare/gpux/v0/add --data-binary $FILEGPUX -H 'Content-Type:application/octet-stream'"
+  curl -s --unix-socket /api -H "Content-Type:application/octet-stream" -X POST --data-binary $FILEGPUX "http://dontcare/gpux/v0/add" | jq -r '.sha1' | awk '{print $1}'
+else
+  echo "uploading to URL $2"
+  curl -s -X POST "$2" -F $FILE
+fi
