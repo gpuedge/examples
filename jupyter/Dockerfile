@@ -18,4 +18,16 @@ RUN apt-get update \
     && pip3 install numpy scipy sklearn tensorflow torch pandas matplotlib jax \
     && pip3 install jupyterlab
 
-ENTRYPOINT ["/usr/local/bin/jupyter-lab", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--ip", "localhost", "--port", "8080", "--notebook-dir=/persist"]
+#install cftunnel
+RUN wget --no-verbose https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb \
+    && dpkg -i cloudflared-linux-amd64.deb \
+    && rm cloudflared-linux-amd64.deb
+
+#setup init because cftunnel
+RUN echo '#!/bin/bash' >> /start.sh \
+    && echo 'cloudflared tunnel --url "http://localhost:8080" &' >> /start.sh \
+    && echo '/usr/local/bin/jupyter-lab --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password="" --NotebookApp.allow_origin="*" --NotebookApp.disable_check_xsrf=True --NotebookApp.allow_remote_access=True --ip localhost --port 8080 --notebook-dir=/persist' >> /start.sh \
+    && chmod +x /start.sh
+
+#ENTRYPOINT ["/usr/local/bin/jupyter-lab", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--NotebookApp.allow_remote_access='true'", "--ip", "localhost", "--port", "8080", "--notebook-dir=/persist"]
+CMD ["/start.sh"]

@@ -14,5 +14,3 @@ Pip
 numpy scipy sklearn tensorflow torch pandas matplotlib jax
 jupyterlab
 ```
-
-## How to use
