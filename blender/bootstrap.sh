@@ -34,28 +34,14 @@ fi
 echo "downloading script.py"
 aria2c -x5 https://raw.githubusercontent.com/gpuedge/examples/main/blender/script.py
 
-echo "running blender $3 $4 $5 $6 $7"
-blender -b --factory-startup -P script.py -- $3 $4 $5 $6 $7 || true
+echo "running blender $3"
+blender -b --factory-startup -P script.py -- $3 || true
 echo "blender finished"
 
-FILE='file=@out.png'
-FILEGPUX='@out.png'
-FILEEXT='.png'
-if [[ "$7" =~ ^ANI* ]]
-then
-  # Zipping up frames
-  zip out.zip out_*.png
-  FILE='file=@out.zip'
-  FILEGPUX='@out.zip'
-  FILEEXT='.zip'
-elif [[ "$7" =~ ^ani* ]]
-then
-  # Zipping up frames
-  zip out.zip out_*.png
-  FILE='file=@out.zip'
-  FILEGPUX='@out.zip'
-  FILEEXT='.zip'
-fi
+FILE='file=@out.zip'
+FILEGPUX='@out.zip'
+FILEEXT='.zip'
+zip out.zip out_*.png
 
 if [ "$2" == "SIASKY" ]
 then
