@@ -33,7 +33,7 @@ Dropbox
 
 ```
 
-## version 3.1
+## version 3.2
 Has precompiled OPTIX kernels (much faster init time), is overall about 25-100% faster compared to 2.93. 
 
 ```
@@ -50,7 +50,7 @@ curl -H "Content-Type: application/json" \
         "ram": 32,
         "disk": 30,
         "gpu": [{"index":0,"name":"geforce rtx 3060"},{"index":1,"name":"geforce rtx 3060"}],
-        "path": "docker.io/nytimes/blender:3.1-gpu-ubuntu18.04",
+        "path": "docker.io/nytimes/blender:3.2-gpu-ubuntu18.04",
         "start_cmd": "wget -q https://raw.githubusercontent.com/gpuedge/examples/main/blender/bootstrap.sh && chmod +x bootstrap.sh && ./bootstrap.sh gpux://4FWrow8vhpCVnY8B1DGZNyx4SF6U GPUX OPTIX 1080 1350 1024"
     }
 }
