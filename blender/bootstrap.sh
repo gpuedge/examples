@@ -66,7 +66,7 @@ then
 elif [ "$2" == "GPUX" ]
 then
   echo "uploading to GPUX"
-  curl -s --unix-socket /api -H "Content-Type:application/octet-stream" -X POST --data-binary $FILEGPUX "http://dontcare/api/file/upload" | jq -r '.sha1' | awk -v filext="$FILEEXT" '{print $1filext}'
+  curl -s --unix-socket /api -H "Content-Type:application/octet-stream" -X POST --data-binary $FILEGPUX "http://dontcare/api/file/upload" | jq -r '.sha256' | awk -v filext="$FILEEXT" '{print $1filext}'
 else
   echo "uploading to URL $2"
   curl -s -X POST "$2" -F $FILE
