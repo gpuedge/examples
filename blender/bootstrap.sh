@@ -33,8 +33,9 @@ else
   aria2c -x5 --check-certificate=false "$1" -o source
 fi
 
-ISZIPPED=$(file -i source | grep zip)
-if [ -z "$ISZIPPED" ]
+ISZIPPED=$(file -i source | grep "application/zip")
+# in bash 0 is true 1 is false, so turn 1 into 0 by !
+if ! [ -z "$ISZIPPED" ]
 then
   unzip source
   BLEND=$(ls | grep .blend | head -1)
