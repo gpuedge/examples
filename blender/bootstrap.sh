@@ -33,14 +33,17 @@ else
   aria2c -x5 --check-certificate=false "$1" -o source
 fi
 
-ISZIPPED=$(file -i source | grep "application/zip")
+echo "checking if zipped.."
+ISZIPPED=$(file -i source | grep "application/zip" || true)
 # in bash 0 is true 1 is false, so turn 1 into 0 by !
-if ! [ -z "$ISZIPPED" ]
+if ! [ -z "${ISZIPPED}" ]
 then
+  echo "unzipping.."
   unzip source
   BLEND=$(ls | grep .blend | head -1)
   mv $BLEND source.blend
 else
+  echo "not zipped"
   mv source source.blend
 fi
 
