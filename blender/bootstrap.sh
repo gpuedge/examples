@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e -o pipefail
 
-echo "GPUX-blender-v0.0.2"
+echo "GPUX-blender-v0.0.3"
 
 # Fix for NVIDIA CUDA key rotation: https://github.com/nytimes/rd-blender-docker/issues/41
 echo "temp fix cuda key rotation.. https://github.com/nytimes/rd-blender-docker/issues/41"
@@ -28,7 +28,7 @@ elif [[ "$1" =~ ^gpux.* ]]
 then
   GPUXURL=$1
   CID="${GPUXURL:7}"
-  curl --unix-socket /api "http://dontcare/api/file/download/$CID" --output source
+  curl --unix-socket /gpux_api "http://dontcare/api/file/download/$CID" --output source
 else
   aria2c -x5 --check-certificate=false "$1" -o source
 fi
