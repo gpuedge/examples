@@ -12,6 +12,6 @@ Example application (written in Elixir) to showcase distributed workloads across
 ## Docker Images
 
 ```
-jupyter  - docker.io/vans163/jupyter:v1
-livebook - docker.io/vans163/livebook:v1
+jupyter  - docker.io/vans163/jupyter:v3
+livebook - docker.io/vans163/livebook:v2
 ```

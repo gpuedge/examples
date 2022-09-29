@@ -19,7 +19,7 @@ cycles - Cycles to do
 Storage supported
 ```
 # Native
-GPUX
+GPUX Job Storage (https://node.com/api/job/storage/download/job_uuid)
 
 # Decentralized
 IPFS

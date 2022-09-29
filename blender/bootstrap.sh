@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e -o pipefail
 
-echo "GPUX-blender-v0.0.1"
+echo "GPUX-blender-v0.0.2"
 
 # Fix for NVIDIA CUDA key rotation: https://github.com/nytimes/rd-blender-docker/issues/41
 echo "temp fix cuda key rotation.. https://github.com/nytimes/rd-blender-docker/issues/41"
@@ -53,25 +53,3 @@ aria2c -x5 https://raw.githubusercontent.com/gpuedge/examples/main/blender/scrip
 echo "running blender $3"
 blender -b --factory-startup -P script.py -- $3 || true
 echo "blender finished"
-
-FILE='file=@out.zip'
-FILEGPUX='@out.zip'
-FILEEXT='.zip'
-zip out.zip out_*.png
-
-if [ "$2" == "SIASKY" ]
-then
-  echo "uploading to SIASKY"
-  curl -s -X POST https://siasky.net/skynet/skyfile -F $FILE | jq -r '.skylink' | awk '{print "https://siasky.net/"$1}'
-elif [ "$2" == "IPFS" ]
-then
-  echo "uploading to IPFS"
-  curl -s --unix-socket /api -X POST http://dontcare/api/v0/add -F $FILE | jq -r '.Hash' | awk '{print "https://cloudflare-ipfs.com/ipfs/"$1}'
-elif [ "$2" == "GPUX" ]
-then
-  echo "uploading to GPUX"
-  curl -s --unix-socket /api -H "Content-Type:application/octet-stream" -X POST --data-binary $FILEGPUX "http://dontcare/api/file/upload" | jq -r '.sha256' | awk -v filext="$FILEEXT" '{print $1filext}'
-else
-  echo "uploading to URL $2"
-  curl -s -X POST "$2" -F $FILE
-fi

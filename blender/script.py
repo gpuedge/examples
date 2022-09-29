@@ -78,10 +78,10 @@ bpy.context.scene.render.threads = int(os.getenv('NPROC', "2"))
 bpy.context.scene.render.image_settings.file_format = 'PNG'
 if "animation" in params:
     print("output animation")
-    bpy.context.scene.render.filepath = "out_####"
+    bpy.context.scene.render.filepath = "/gpux_job/out_####"
 else:
     print("output single image")
-    bpy.context.scene.render.filepath = f'out_{bpy.context.scene.frame_end}'
+    bpy.context.scene.render.filepath = f'/gpux_job/out_{bpy.context.scene.frame_end}'
 
 if "animation" in params:
     bpy.ops.render.render(animation = True)

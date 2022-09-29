@@ -2,10 +2,16 @@
 
 ## Packages included
 
-System
+Build
 ```
-apt-transport-https apt-utils
-vim git curl wget locate locales
+podman login docker.io
+podman build --tag vans163/livebook:v2 .
+podman push vans163/livebook:v2
+```
 
-build-essential autoconf libncurses-dev m4 xsltproc libxml2-utils unixodbc-dev
+Run
+```
+set ENVVARS for pod to 
+
+LIVEBOOK_IP=0.0.0.0 LIVEBOOK_DATA_PATH=/gpux_usr LIVEBOOK_HOME=/gpux_usr LIVEBOOK_TOKEN_ENABLED=false
 ```

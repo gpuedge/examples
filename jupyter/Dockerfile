@@ -26,8 +26,7 @@ RUN wget --no-verbose https://github.com/cloudflare/cloudflared/releases/latest/
 #setup init because cftunnel
 RUN echo '#!/bin/bash' >> /start.sh \
     && echo 'cloudflared tunnel --url "http://localhost:8080" &' >> /start.sh \
-    && echo '/usr/local/bin/jupyter-lab --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password="" --NotebookApp.allow_origin="*" --NotebookApp.disable_check_xsrf=True --NotebookApp.allow_remote_access=True --ip 0.0.0.0 --port 8080 --notebook-dir=/persist' >> /start.sh \
+    && echo '/usr/local/bin/jupyter-lab --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password="" --NotebookApp.allow_origin="*" --NotebookApp.disable_check_xsrf=True --NotebookApp.allow_remote_access=True --ip 0.0.0.0 --port 8080 --notebook-dir=/gpux_usr' >> /start.sh \
     && chmod +x /start.sh
 
-#ENTRYPOINT ["/usr/local/bin/jupyter-lab", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--NotebookApp.allow_remote_access='true'", "--ip", "localhost", "--port", "8080", "--notebook-dir=/persist"]
 CMD ["/start.sh"]
