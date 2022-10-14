@@ -3,6 +3,8 @@ set -e -o pipefail
 
 echo "GPUX-blender-v0.0.3"
 
+mkdir /output
+
 # Fix for NVIDIA CUDA key rotation: https://github.com/nytimes/rd-blender-docker/issues/41
 echo "temp fix cuda key rotation.. https://github.com/nytimes/rd-blender-docker/issues/41"
 rm /etc/apt/sources.list.d/cuda.list \
