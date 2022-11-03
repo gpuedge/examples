@@ -18,15 +18,9 @@ RUN apt-get update \
     && pip3 install numpy scipy sklearn tensorflow torch pandas matplotlib jax \
     && pip3 install jupyterlab
 
-#install cftunnel
-RUN wget --no-verbose https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb \
-    && dpkg -i cloudflared-linux-amd64.deb \
-    && rm cloudflared-linux-amd64.deb
-
-#setup init because cftunnel
+#setup init
 RUN echo '#!/bin/bash' >> /start.sh \
-    && echo 'cloudflared tunnel --url "http://localhost:8080" &' >> /start.sh \
-    && echo '/usr/local/bin/jupyter-lab --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password="" --NotebookApp.allow_origin="*" --NotebookApp.disable_check_xsrf=True --NotebookApp.allow_remote_access=True --ip 0.0.0.0 --port 8080 --notebook-dir=/gpux_usr' >> /start.sh \
+    && echo '/usr/local/bin/jupyter-lab --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password="" --NotebookApp.allow_origin="*" --NotebookApp.disable_check_xsrf=True --NotebookApp.allow_remote_access=True --ip 0.0.0.0 --port 8080 --notebook-dir=/gpux' >> /start.sh \
     && chmod +x /start.sh
 
 CMD ["/start.sh"]
