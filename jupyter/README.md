@@ -5,8 +5,8 @@
 Build
 ```
 podman login docker.io
-podman build --tag vans163/jupyter:v3 .
-podman push vans163/jupyter:v3
+podman build --tag vans163/jupyter:v4 .
+podman push vans163/jupyter:v4
 ```
 
 System
