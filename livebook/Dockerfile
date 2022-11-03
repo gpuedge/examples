@@ -1,9 +1,9 @@
 FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND noninteractive
 
-ENV SSL_VERSION=1.1.1o
-ENV OTP_VERSION=OTP-24.3.4
-ENV ELIXIR_VERSION=v1.13.4
+ENV SSL_VERSION=1.1.1s
+ENV OTP_VERSION=OTP-25.1.2
+ENV ELIXIR_VERSION=v1.14.1
 
 RUN apt-get update && apt-get install -y vim git curl locate wget apt-transport-https apt-utils locales
 ENV LANGUAGE en_US.UTF-8
@@ -43,14 +43,8 @@ RUN rm -rf /root/source
 #Install livebook
 RUN mix escript.install --force hex livebook
 
-#install cftunnel
-RUN wget --no-verbose https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb \
-    && dpkg -i cloudflared-linux-amd64.deb \
-    && rm cloudflared-linux-amd64.deb
-
-#setup init because cftunnel
+#setup init
 RUN echo '#!/bin/bash' >> /start.sh \
-    && echo 'cloudflared tunnel --url "http://localhost:8080" &' >> /start.sh \
     && echo '/root/.mix/escripts/livebook server' >> /start.sh \
     && chmod +x /start.sh
 
