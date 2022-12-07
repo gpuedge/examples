@@ -5,8 +5,8 @@
 Build
 ```
 podman login docker.io
-podman build --tag vans163/jupyter:v4 .
-podman push vans163/jupyter:v4
+podman build --squash-all --tag vans163/jupyter:v4 .
+podman push --format oci --compression-format zstd:chunked vans163/jupyter:v4
 ```
 
 System

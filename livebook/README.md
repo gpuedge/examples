@@ -5,8 +5,8 @@
 Build
 ```
 podman login docker.io
-podman build --tag vans163/livebook:v3 .
-podman push vans163/livebook:v3
+podman build --squash-all --tag vans163/livebook:v3 .
+podman push --format oci --compression-format zstd:chunked vans163/livebook:v3
 ```
 
 Run

@@ -16,7 +16,8 @@ RUN apt-get update \
     && apt-get install -y python3 python3-pip \
     && apt-get clean && apt-get autoremove --yes \
     && pip3 install numpy scipy sklearn tensorflow torch pandas matplotlib jax \
-    && pip3 install jupyterlab
+    && pip3 install jupyterlab \
+    && rm -rf /root/.cache && mkdir /root/.cache
 
 #setup init
 RUN echo '#!/bin/bash' >> /start.sh \
