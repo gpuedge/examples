@@ -21,7 +21,7 @@ RUN apt-get update \
 
 #setup init
 RUN echo '#!/bin/bash' >> /start.sh \
-    && echo '/usr/local/bin/jupyter-lab --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password="" --NotebookApp.allow_origin="*" --NotebookApp.disable_check_xsrf=True --NotebookApp.allow_remote_access=True --ip 0.0.0.0 --port 8080 --notebook-dir=/gpux' >> /start.sh \
+    && echo '/usr/local/bin/jupyter-lab --no-browser --allow-root --NotebookApp.token="" --NotebookApp.password="" --NotebookApp.allow_origin="*" --NotebookApp.disable_check_xsrf=True --NotebookApp.allow_remote_access=True --ip 0.0.0.0 --port 8888 --notebook-dir=/' >> /start.sh \
     && chmod +x /start.sh
 
 CMD ["/start.sh"]
